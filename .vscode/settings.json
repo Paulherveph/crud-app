@@ -1,0 +1,11 @@
+{
+  "iis.configDir": "",
+  "[codeblock]": {
+    "files.encoding": "windows1252"
+  },
+  "dart.flutterHotReloadOnSave": "all",
+  "dart.hotReloadOnSave": "all",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 500,
+  "dart.previewHotReloadOnSaveWatcher": true
+}
