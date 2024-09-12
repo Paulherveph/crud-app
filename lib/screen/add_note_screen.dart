@@ -35,7 +35,7 @@ class _Add_creenState extends State<Add_creen> {
           style: TextStyle(fontSize: 18, color: Colors.black),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            hintText: 'subtitle',
+            hintText: 'subtitles',
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Color(0xffc5c5c5), width: 2.0),
