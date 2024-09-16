@@ -44,11 +44,16 @@ class _Home_ScreenState extends State<Home_Screen> {
           }
           return true;
         },
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return Task_Widget();
-          },
-          itemCount: 10,
+        child: StreamBuilder<Object>(
+          stream: null,
+          builder: (context, snapshot) {
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                return Task_Widget();
+              },
+              itemCount: 10,
+            );
+          }
         ),
       )),
     );
