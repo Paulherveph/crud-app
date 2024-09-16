@@ -16,6 +16,7 @@ analyzer:
     override_on_non_overriding_member: ignore
     #prefer_const_constructors: ignore
     #prefer_const_literals_to_create_immutables: ignore
+    prefer_const_constructors: ignore
     prefer_final_fields: ignore
 include: package:flutter_lints/flutter.yaml
 

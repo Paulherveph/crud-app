@@ -1,16 +1,15 @@
-// ignore_for_file: sized_box_for_whitespace
-
 import 'package:flutter/material.dart';
+// ignore_for_file: sized_box_for_whitespace
 import 'package:flutter_to_do_list/const/colors.dart';
 
-class Add_creen extends StatefulWidget {
-  const Add_creen({super.key});
+class Edit_Screen extends StatefulWidget {
+  const Edit_Screen({super.key});
 
   @override
-  State<Add_creen> createState() => _Add_creenState();
+  State<Edit_Screen> createState() => _Edit_ScreenState();
 }
 
-class _Add_creenState extends State<Add_creen> {
+class _Edit_ScreenState extends State<Edit_Screen> {
   final title = TextEditingController();
   final subtitle = TextEditingController();
 
@@ -166,3 +165,4 @@ class _Add_creenState extends State<Add_creen> {
     );
   }
 }
+ 
