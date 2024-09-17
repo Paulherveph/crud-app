@@ -16,6 +16,7 @@ class Firestore_Datasource {
           .set({"id": _auth.currentUser!.uid, "email": email});
       return true;
     } catch (e) {
+      print(e);
       return true;
     }
   }
@@ -23,7 +24,7 @@ class Firestore_Datasource {
   Future<bool> AddNote(String subtitle, String title, int image) async {
     try {
       var uuid = Uuid().v4();
-      DateTime data = DateTime.now();
+      DateTime data = new DateTime.now();
       await _firestore
           .collection('users')
           .doc(_auth.currentUser!.uid)
@@ -32,32 +33,81 @@ class Firestore_Datasource {
           .set({
         'id': uuid,
         'subtitle': subtitle,
-        'isDone': false,
+        'isDon': false,
         'image': image,
-        'time': data,
+        'time': '${data.hour}:${data.minute}',
         'title': title,
       });
       return true;
     } catch (e) {
+      print(e);
       return true;
     }
   }
 
-  List getNotes(AsyncSnapshot snapchot) {
+  List getNotes(AsyncSnapshot snapshot) {
     try {
-      final notesList = snapchot.data.docs.map((doc) {
-        final data = doc.data as Map<String, dynamic>;
+      final notesList = snapshot.data!.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
         return Note(
           data['id'],
           data['subtitle'],
           data['time'],
           data['image'],
           data['title'],
+          data['isDon']
         );
       }).toList();
       return notesList;
     } catch (e) {
+      print(e);
       return [];
     }
   }
+
+  Stream<QuerySnapshot> stream() {
+    return _firestore
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .collection('notes')
+        .snapshots();
+  }
+
+  Future<bool> isdone(String uuid, bool isDon) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('notes')
+          .doc(uuid)
+          .update({'isDon': isDon});
+      return true;
+    } catch (e) {
+      print(e);
+      return true;
+    }
+  }
+
+  Future<bool> Update_Note(
+      String uuid, int image, String title, String subtitle) async {
+    try {
+      DateTime data = new DateTime.now();
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('notes')
+          .doc(uuid)
+          .update({
+        'time': '${data.hour}:${data.minute}',
+        'subtitle': subtitle,
+        'title': title,
+        'image': image,
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return true;
+    }
+  }
+
 }

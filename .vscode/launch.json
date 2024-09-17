@@ -10,7 +10,6 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "args": ["dev"]
         },
         {
             "name": "flutter_to_do_list (profile mode)",

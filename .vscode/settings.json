@@ -7,5 +7,8 @@
   "dart.hotReloadOnSave": "all",
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 500,
-  "dart.previewHotReloadOnSaveWatcher": true
+  "dart.previewHotReloadOnSaveWatcher": true,
+  "cSpell.words": [
+    "Snapchot"
+  ]
 }

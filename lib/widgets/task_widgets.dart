@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_to_do_list/const/colors.dart';
+import 'package:flutter_to_do_list/model/notes_model.dart';
 import 'package:flutter_to_do_list/screen/edit_screen.dart';
 
 class Task_Widget extends StatefulWidget {
-  const Task_Widget({super.key});
+  Note _note;
+ Task_Widget(this._note,{super.key});
 
   @override
   State<Task_Widget> createState() => _Task_WidgetState();
@@ -47,7 +49,7 @@ class _Task_WidgetState extends State<Task_Widget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'title',
+                            widget._note.title,
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -62,7 +64,7 @@ class _Task_WidgetState extends State<Task_Widget> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        'subtitle',
+                        widget._note.subtitle,
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -86,7 +88,7 @@ class _Task_WidgetState extends State<Task_Widget> {
         decoration: BoxDecoration(
           color: Colors.white,
           image: DecorationImage(
-              image: AssetImage('images/0.png'), fit: BoxFit.cover),
+              image: AssetImage('images/${widget._note.image}.png'), fit: BoxFit.cover),
         ));
   }
 
@@ -107,7 +109,7 @@ class _Task_WidgetState extends State<Task_Widget> {
                   Image.asset('images/icon_time.png'),
                   SizedBox(width: 10),
                   Text(
-                    'time',
+                    widget._note.time,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
