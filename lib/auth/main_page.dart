@@ -14,8 +14,7 @@ class Main_Page extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Home_Screen();
-
-          }else{
+          } else {
             return Auth_Page();
           }
         },

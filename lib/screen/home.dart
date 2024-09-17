@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_to_do_list/const/colors.dart';
-import 'package:flutter_to_do_list/data/firestor.dart';
 import 'package:flutter_to_do_list/screen/add_note_screen.dart';
-import 'package:flutter_to_do_list/widgets/task_widgets.dart';
+import 'package:flutter_to_do_list/screen/login.dart';
+import 'package:flutter_to_do_list/widgets/stream_note.dart';
 
 class Home_Screen extends StatefulWidget {
   const Home_Screen({super.key});
@@ -13,55 +11,90 @@ class Home_Screen extends StatefulWidget {
   State<Home_Screen> createState() => _Home_ScreenState();
 }
 
+bool show = true;
+
 class _Home_ScreenState extends State<Home_Screen> {
   @override
-  bool show = true;
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColors,
-      floatingActionButton: Visibility(
-        visible: show,
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Add_creen(),
-            ));
-          },
-          backgroundColor: custom_green,
-          child: Icon(Icons.add, size: 30),
-        ),
+      backgroundColor: Colors.deepOrangeAccent,
+      floatingActionButton: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          // Bouton de déconnexion
+          FloatingActionButton(
+            onPressed: () async {
+              bool confirm = await _showLogoutConfirmation(context);
+              if (confirm) {
+                // Logique pour se déconnecter
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => LogIN_Screen(() {}),
+                ));
+              }
+            },
+            backgroundColor: Colors.redAccent,
+            child: Icon(Icons.logout, size: 30),
+          ),
+          // Bouton d'ajout
+          SizedBox(height: 60), // espace pour le bouton d'ajout
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Add_creen(),
+              ));
+            },
+            backgroundColor: const Color.fromARGB(255, 240, 105, 197),
+            child: Icon(Icons.add, size: 30),
+          ),
+        ],
       ),
       body: SafeArea(
-          child: NotificationListener<UserScrollNotification>(
-        onNotification: (notification) {
-          if (notification.direction == ScrollDirection.forward) {
+        child: NotificationListener<UserScrollNotification>(
+          onNotification: (notification) {
             setState(() {
-              show = true;
+              show = notification.direction == ScrollDirection.forward;
             });
-          }
-          if (notification.direction == ScrollDirection.reverse) {
-            setState(() {
-              show = false;
-            });
-          }
-          return true;
-        },
-        child: StreamBuilder<QuerySnapshot>(
-            stream: Firestore_Datasource().stream(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return CircularProgressIndicator();
-              }
-              final notesList = Firestore_Datasource().getNotes(snapshot);
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final note = notesList[index];
-                  return Task_Widget(note);
-                },
-                itemCount: notesList.length,
-              );
-            }),
-      )),
+            return true;
+          },
+          child: ListView(
+            children: [
+              Stream_note(false),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'Finished Tasks',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              Stream_note(true),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  Future<bool> _showLogoutConfirmation(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Déconnexion', style: TextStyle(color: Colors.black)),
+            content: Text('Êtes-vous sûr de vouloir vous déconnecter ?', style: TextStyle(color: Colors.black)),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Annuler', style: TextStyle(color: Colors.blue)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Se déconnecter', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        ) ??
+        false; // retourne false si le dialogue est annulé
   }
 }

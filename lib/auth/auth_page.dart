@@ -20,7 +20,7 @@ class _Auth_PageState extends State<Auth_Page> {
   @override
   Widget build(BuildContext context) {
     if (a) {
-      return LogIn_Screen(to);
+      return LogIN_Screen(to);
     } else {
       return SignUp_Screen(to);
     }

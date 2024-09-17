@@ -55,7 +55,7 @@ class Firestore_Datasource {
           data['time'],
           data['image'],
           data['title'],
-          data['isDon']
+          data['isDon'],
         );
       }).toList();
       return notesList;
@@ -65,11 +65,12 @@ class Firestore_Datasource {
     }
   }
 
-  Stream<QuerySnapshot> stream() {
+  Stream<QuerySnapshot> stream(bool isDone) {
     return _firestore
         .collection('users')
         .doc(_auth.currentUser!.uid)
         .collection('notes')
+        .where('isDon', isEqualTo: isDone)
         .snapshots();
   }
 
@@ -110,4 +111,18 @@ class Firestore_Datasource {
     }
   }
 
+  Future<bool> delet_note(String uuid) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('notes')
+          .doc(uuid)
+          .delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return true;
+    }
+  }
 }

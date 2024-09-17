@@ -1,119 +1,116 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_to_do_list/const/colors.dart';
+import 'package:flutter_to_do_list/data/firestor.dart';
 import 'package:flutter_to_do_list/model/notes_model.dart';
 import 'package:flutter_to_do_list/screen/edit_screen.dart';
 
 class Task_Widget extends StatefulWidget {
-  Note _note;
- Task_Widget(this._note,{super.key});
+  final Note _note;
+  const Task_Widget(this._note, {super.key});
 
   @override
   State<Task_Widget> createState() => _Task_WidgetState();
 }
 
-bool isDone = false;
-
 class _Task_WidgetState extends State<Task_Widget> {
   @override
   Widget build(BuildContext context) {
+    bool isDone = widget._note.isDon;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: Container(
+      child: Card(
+        elevation: 4,
+        child: Container(
           width: double.infinity,
-          height: 130,
+          height: 135,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 5,
-                  blurRadius: 10,
-                  offset: Offset(0, 2),
-                ),
-              ],
-              color: Colors.white),
+            borderRadius: BorderRadius.circular(10),
+            color: const Color.fromARGB(255, 170, 124, 124),
+          ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                //image
+                // image
                 imageee(),
                 SizedBox(width: 25),
-                //title and subtitle
+                // title and subtitle
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 2),
+                      SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             widget._note.title,
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: const Color.fromARGB(255, 112, 211, 251),
+                            ),
                           ),
                           Checkbox(
-                              value: isDone,
-                              onChanged: (value) {
-                                setState(() {
-                                  isDone = !isDone;
-                                });
-                              }),
+                            activeColor: const Color.fromARGB(255, 168, 16, 105),
+                            value: isDone,
+                            onChanged: (value) {
+                              setState(() {
+                                isDone = !isDone;
+                              });
+                              Firestore_Datasource()
+                                  .isdone(widget._note.id, isDone);
+                            },
+                          )
                         ],
                       ),
-                      SizedBox(height: 5),
                       Text(
                         widget._note.subtitle,
                         style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade400),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromARGB(255, 226, 237, 110)),
                       ),
                       Spacer(),
-                      edit_time(),
+                      edit_time()
                     ],
                   ),
-                )
+                ),
               ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
-  }
-
-  Widget imageee() {
-    return Container(
-        height: 130,
-        width: 100,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-              image: AssetImage('images/${widget._note.image}.png'), fit: BoxFit.cover),
-        ));
   }
 
   Widget edit_time() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 3.5),
       child: Row(
         children: [
           Container(
             width: 90,
             height: 28,
             decoration: BoxDecoration(
-                color: custom_green, borderRadius: BorderRadius.circular(18)),
+              color: const Color.fromARGB(255, 170, 124, 124),
+              borderRadius: BorderRadius.circular(18),
+            ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
               child: Row(
                 children: [
-                  Image.asset('images/icon_time.png'),
                   SizedBox(width: 10),
                   Text(
                     widget._note.time,
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -123,18 +120,21 @@ class _Task_WidgetState extends State<Task_Widget> {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Edit_Screen(),
+                builder: (context) => Edit_Screen(widget._note),
               ));
             },
             child: Container(
               width: 90,
               height: 28,
               decoration: BoxDecoration(
-                  color: Color(0xffE2F6F1),
-                  borderRadius: BorderRadius.circular(18)),
+                color: Color.fromARGB(255, 237, 119, 233),
+                borderRadius: BorderRadius.circular(18),
+              ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 child: Row(
                   children: [
                     Image.asset('images/icon_edit.png'),
@@ -142,9 +142,9 @@ class _Task_WidgetState extends State<Task_Widget> {
                     Text(
                       'edit',
                       style: TextStyle(
-                          color: custom_green,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -152,6 +152,20 @@ class _Task_WidgetState extends State<Task_Widget> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget imageee() {
+    return Container(
+      height: 130,
+      width: 100,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 170, 124, 124),
+        image: DecorationImage(
+          image: AssetImage('images/3.png'),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
